@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EscapeDismisses", "EscapeDismisses\EscapeDismisses.csproj", "{E43DBD7F-97D7-43DF-A88F-10A1FBFD1FAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickSave", "QuickSave\QuickSave.csproj", "{AF776455-440E-4FE4-AC40-F4776B9143BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{83324D38-CDC4-421E-BEC0-375B7E5302C1}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftPopulate", "ShiftPopulate\ShiftPopulate.csproj", "{C87BE74E-BC1E-496F-8C85-1FEC31D52EDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SituationAutomation", "SituationAutomation\SituationAutomation.csproj", "{A7800126-7BF5-4D8E-A93B-2E03ECB11FB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IlilimModUtil", "IlilimModUtils\IlilimModUtils.csproj", "{C90884FA-00A3-484D-97EE-3AA9D1FE146D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E43DBD7F-97D7-43DF-A88F-10A1FBFD1FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E43DBD7F-97D7-43DF-A88F-10A1FBFD1FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E43DBD7F-97D7-43DF-A88F-10A1FBFD1FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E43DBD7F-97D7-43DF-A88F-10A1FBFD1FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF776455-440E-4FE4-AC40-F4776B9143BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF776455-440E-4FE4-AC40-F4776B9143BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF776455-440E-4FE4-AC40-F4776B9143BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF776455-440E-4FE4-AC40-F4776B9143BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87BE74E-BC1E-496F-8C85-1FEC31D52EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87BE74E-BC1E-496F-8C85-1FEC31D52EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87BE74E-BC1E-496F-8C85-1FEC31D52EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87BE74E-BC1E-496F-8C85-1FEC31D52EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7800126-7BF5-4D8E-A93B-2E03ECB11FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7800126-7BF5-4D8E-A93B-2E03ECB11FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7800126-7BF5-4D8E-A93B-2E03ECB11FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7800126-7BF5-4D8E-A93B-2E03ECB11FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C90884FA-00A3-484D-97EE-3AA9D1FE146D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C90884FA-00A3-484D-97EE-3AA9D1FE146D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C90884FA-00A3-484D-97EE-3AA9D1FE146D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C90884FA-00A3-484D-97EE-3AA9D1FE146D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49228E10-7483-4793-B92F-72FC213FC72B}
+	EndGlobalSection
+EndGlobal

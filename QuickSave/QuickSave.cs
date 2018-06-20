@@ -1,18 +1,12 @@
 ﻿using Assets.Core.Interfaces;
-using Assets.Core.Entities;
 using Assets.CS.TabletopUI;
-using Assets.TabletopUi.Scripts.Services;
-using Assets.TabletopUi;
-using Assets.TabletopUi.SlotsContainers;
 using Assets.TabletopUi.Scripts.Infrastructure;
+using Assets.TabletopUi.Scripts.Services;
 using Harmony;
 using Partiality.Modloader;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using IlilimModUtils;
 
 /**
  * Mod that binds save and load to F5 and F9

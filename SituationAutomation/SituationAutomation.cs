@@ -1,23 +1,15 @@
-﻿using Assets.Core;
-using Assets.Core.Interfaces;
-using Assets.Core.Entities;
+﻿using Assets.Core.Interfaces;
 using Assets.CS.TabletopUI;
-using Assets.TabletopUi.Scripts.Services;
-using Assets.TabletopUi.Scripts.Interfaces;
 using Assets.TabletopUi;
-using Assets.TabletopUi.SlotsContainers;
-using Assets.TabletopUi.Scripts.Infrastructure;
 using Harmony;
+using IlilimModUtils;
 using Partiality.Modloader;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using IlilimModUtils;
-using System.Linq;
+using UnityEngine.UI;
 
 /**
  * Mod that enables automation for situations/verbs

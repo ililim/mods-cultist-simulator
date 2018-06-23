@@ -50,6 +50,16 @@ No more having to move your mouse all the way to the upper right corner of each 
 
 If any information or notification panels are open, those will be closed first. If those are all closed then the open situation window will be closed instead. (To open the settings menu use shift+esc).
 
+## ⏰ SpeedChanger
+
+**Change the speed of the game to your liking.**
+
+This mod allows you to change the amount time that passes with each tick of the clock without messing up the speed of any other game elements.
+
+To adjust the game speed: 1) Find your save file folder by going into the game options and clicking "View Save File". 2) In this folder open the file 'config.ini' in a text editor. 3) Append a new line with the text `gamespeed=3`.
+
+Now the all the timers will run 3x times faster (effectively running at fast-forward speed by default). Of course you can change the multiplier to anything you want: 0.5 for half speed, 2 for double speed, or 20 for one wild ride.
+
 ## 💾 QuickSave
 
 **Save/load with F5/F9.**
@@ -68,3 +78,5 @@ This mod puts save and load at your finger tips (F5 and F9 respectively). Each t
 ### Feedback and issues
 
 If you have any suggestions, contributions, or issues feel free to create a new issue or pull request on Github.
+
+If you do encounter issues, add the line `debug=1` to your config.ini file. (To find this file, go into the game options and click "View Save File". It will be in this folder.) Now run the game again and if you encounter any issues they will be logged to a file on your desktop called "harmony.log.txt". Reproduce the error you encountered again and include any logs here with your issue submission.

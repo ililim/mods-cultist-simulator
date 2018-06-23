@@ -2,6 +2,7 @@
 using Assets.CS.TabletopUI;
 using Assets.TabletopUi.Scripts.Infrastructure;
 using Harmony;
+using IlilimModUtils;
 using Partiality.Modloader;
 using System;
 using System.Collections.Generic;
@@ -19,29 +20,14 @@ namespace EscapeDismisses
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
-        public static bool escHidesSituations = false;
-
         public override void Init()
         {
-            // Get player settings
-            string path = Application.persistentDataPath + "/config.ini";
-            string text = File.ReadAllText(path);
-            if (text.Contains("escHidesSituations=1"))
-            {
-                escHidesSituations = true;
-            }
-
-            try
+            Patcher.Run(() =>
             {
                 HarmonyInstance
                     .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
                     .PatchAll(Assembly.GetExecutingAssembly());
-                FileLog.Log("==Loaded== " + GetType().Namespace);
-            }
-            catch (Exception e)
-            {
-                FileLog.Log(e.ToString());
-            }
+            });
         }
     }
 
@@ -123,7 +109,10 @@ namespace EscapeDismisses
 
         static void Postfix(NotificationWindow __result)
         {
-            WindowController.pastNotifications.Add(__result);
+            Patcher.Run(() =>
+            {
+                WindowController.pastNotifications.Add(__result);
+            });
         }
     }
 
@@ -133,12 +122,15 @@ namespace EscapeDismisses
     {
         static bool Prefix(Element element, TokenDetailsWindow __instance)
         {
-            if (element.Id == "__GetActivityState()")
+            return Patcher.Run(() =>
             {
-                WindowController.tokenDetailsVisible = __instance.gameObject.activeInHierarchy;
-                return false;
-            }
-            return true;
+                if (element.Id == "__GetActivityState()")
+                {
+                    WindowController.tokenDetailsVisible = __instance.gameObject.activeInHierarchy;
+                    return false;
+                }
+                return true;
+            });
         }
     }
 
@@ -148,12 +140,15 @@ namespace EscapeDismisses
     {
         static bool Prefix(Element element, AspectDetailsWindow __instance)
         {
-            if (element.Id == "__GetActivityState()")
+            return Patcher.Run(() =>
             {
-                WindowController.aspectDetailsVisible = __instance.gameObject.activeInHierarchy;
-                return false;
-            }
-            return true;
+                if (element.Id == "__GetActivityState()")
+                {
+                    WindowController.aspectDetailsVisible = __instance.gameObject.activeInHierarchy;
+                    return false;
+                }
+                return true;
+            });
         }
     }
 
@@ -163,20 +158,23 @@ namespace EscapeDismisses
     class Patch_Notifier_PushTextToLog {
         static bool Prefix(TokenDetailsWindow ___tokenDetails, AspectDetailsWindow ___aspectDetails, string text)
         {
-            if (text == "__HideAllNotifications()")
+            return Patcher.Run(() =>
             {
-                ___aspectDetails.Hide();
-                ___tokenDetails.Hide();
-                return false;
-            }
-            else if (text == "__GetDetailWindowsActivityState()")
-            {
-                ___tokenDetails.ShowElementDetails(new Element("__GetActivityState()", null, null, 0, null), null);
-                ___aspectDetails.ShowAspectDetails(new Element("__GetActivityState()", null, null, 0, null), false);
-                return false;
-            }
+                if (text == "__HideAllNotifications()")
+                {
+                    ___aspectDetails.Hide();
+                    ___tokenDetails.Hide();
+                    return false;
+                }
+                else if (text == "__GetDetailWindowsActivityState()")
+                {
+                    ___tokenDetails.ShowElementDetails(new Element("__GetActivityState()", null, null, 0, null), null);
+                    ___aspectDetails.ShowAspectDetails(new Element("__GetActivityState()", null, null, 0, null), false);
+                    return false;
+                }
 
-            return true;
+                return true;
+            });
         }
     }
 
@@ -186,7 +184,7 @@ namespace EscapeDismisses
     {
         static bool Prefix()
         {
-            try
+            return Patcher.Run(() =>
             {
                 // If escape was not pressed or if it was pressed with either shift key we run the game's default function
                 if (!Input.GetKeyDown(KeyCode.Escape) || (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
@@ -195,13 +193,7 @@ namespace EscapeDismisses
                 }
                 WindowController.CloseAll(excludeSituations: WindowController.AnyTopPanelsVisible());
                 return false;
-            }
-            catch (Exception e)
-            {
-                FileLog.Log(e.ToString());
-                return false;
-            }
-
+            });
         }
     }
 }

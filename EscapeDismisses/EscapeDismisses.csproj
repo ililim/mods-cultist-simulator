@@ -57,5 +57,11 @@
     <Compile Include="EscapeDismisses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IlilimModUtils\IlilimModUtils.csproj">
+      <Project>{C90884FA-00A3-484D-97EE-3AA9D1FE146D}</Project>
+      <Name>IlilimModUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

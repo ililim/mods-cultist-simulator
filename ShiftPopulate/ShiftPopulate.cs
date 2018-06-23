@@ -21,9 +21,12 @@ namespace ShiftPopulate
     {
         public override void Init()
         {
-            HarmonyInstance
-                .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
-                .PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.Run(() =>
+            {
+                HarmonyInstance
+                    .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
+                    .PatchAll(Assembly.GetExecutingAssembly());
+            });
         }
     }
 
@@ -32,7 +35,7 @@ namespace ShiftPopulate
     {
         static bool Prefix(ElementStackToken __instance)
         {
-            try
+            return Patcher.Run(() =>
             {
                 // If neither shift is down give back control to the game immediately
                 if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
@@ -69,12 +72,7 @@ namespace ShiftPopulate
 
 
                 return false;
-            }
-            catch (Exception e)
-            {
-                FileLog.Log(e.ToString());
-                return true;
-            }
+            });
         }
     }
 
@@ -83,26 +81,27 @@ namespace ShiftPopulate
     {
         static bool Prefix(RecipeSlot __instance)
         {
-            // If neither shift is down give back control to the game immediately
-            if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
-                return true;
-
-            FileLog.Log("Comparing");
-
-            var slot = __instance;
-            var situation = GameBoard.GetOpenSituation();
-
-            if (situation == null || slot.GetElementStackInSlot() != null || !SituSlotController.GetAllEmptySlots(situation).Contains(slot))
-                return true;
-
-            foreach (var stack in Positions.GetStacksRelativeTo(situation))
-            if (SituSlotController.StackMatchesSlot(stack, slot))
+            return Patcher.Run(() =>
             {
-                SituSlotController.MoveStackIntoSlot(stack as ElementStackToken, slot);
-                break;
-            }
+                // If neither shift is down give back control to the game immediately
+                if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
+                    return true;
 
-            return false;
+                var slot = __instance;
+                var situation = GameBoard.GetOpenSituation();
+
+                if (situation == null || slot.GetElementStackInSlot() != null || !SituSlotController.GetAllEmptySlots(situation).Contains(slot))
+                    return true;
+
+                foreach (var stack in Positions.GetStacksRelativeTo(situation))
+                if (SituSlotController.StackMatchesSlot(stack, slot))
+                {
+                    SituSlotController.MoveStackIntoSlot(stack as ElementStackToken, slot);
+                    break;
+                }
+
+                return false;
+            });
         }
     }
 
@@ -112,24 +111,26 @@ namespace ShiftPopulate
     {
         static bool Prefix()
         {
-            if (!Input.GetKeyDown(KeyCode.E))
-                return true;
+            return Patcher.Run(() =>
+            {
+                if (!Input.GetKeyDown(KeyCode.E))
+                    return true;
 
-            SituationController situation = GameBoard.GetOpenSituation();
-            if (situation == null)
-                return false;
+                SituationController situation = GameBoard.GetOpenSituation();
 
-                foreach (var slot in SituSlotController.GetAllSlots(situation).AsEnumerable().Reverse())
-                {
-                    var stack = slot.GetElementStackInSlot() as ElementStackToken;
-                    if (stack != null)
+                if (situation != null)
+                    foreach (var slot in SituSlotController.GetAllSlots(situation).AsEnumerable().Reverse())
                     {
-                        stack.ReturnToTabletop(new Context(Context.ActionSource.PlayerDrag));
-                        break;
+                        var stack = slot.GetElementStackInSlot() as ElementStackToken;
+                        if (stack != null)
+                        {
+                            stack.ReturnToTabletop(new Context(Context.ActionSource.PlayerDrag));
+                            break;
+                        }
                     }
-                }
 
-            return false;
+                return false;
+            });
         }
     }
 }

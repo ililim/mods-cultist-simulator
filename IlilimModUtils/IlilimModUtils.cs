@@ -8,6 +8,7 @@ using Harmony;
 using Partiality.Modloader;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -21,11 +22,53 @@ namespace IlilimModUtils
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
+        public static bool DebugLog = false;
+
         public override void Init()
         {
-            HarmonyInstance
-                .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
-                .PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.Run(() =>
+            {
+                string path = Application.persistentDataPath + "/config.ini";
+                if (File.Exists(path))
+                {
+                    DebugLog = File.ReadAllText(path).Contains("debug=1");
+                }
+                HarmonyInstance
+                    .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
+                    .PatchAll(Assembly.GetExecutingAssembly());
+            });
+        }
+    }
+    
+    // Wrapper for running patched methods with optional debug logging
+    public class Patcher
+    {
+        public static T Run<T>(Func<T> patch, T defaultReturn)
+        {
+            try
+            {
+                return patch();
+            }
+            catch (Exception e)
+            {
+                if (Mod.DebugLog)
+                    FileLog.Log("Error occurred: \n" +  e.ToString());
+                return defaultReturn;
+            }
+        }
+
+        // By default a patch returns true on error (causing it to run the original method)
+        public static bool Run(Func<bool> patch, bool defaultReturn = true)
+        {
+            return Run<bool>(patch, defaultReturn);
+        }
+
+        public static void Run(Action patch)
+        {
+            Run<object>(() => {
+                patch();
+                return null;
+            }, null);
         }
     }
 
@@ -293,10 +336,11 @@ namespace IlilimModUtils
     {
         public static void Prefix(int ___beatCounter)
         {
-            if (___beatCounter >= 19) // It will turn into 20 this beat
+            Patcher.Run(() =>
             {
-                SituSlotController.DoFillSlots();
-            }
+                if (___beatCounter >= 19) // It will turn into 20 this beat
+                    SituSlotController.DoFillSlots();
+            });
         }
     }
 
@@ -306,7 +350,10 @@ namespace IlilimModUtils
     {
         public static void PostFix()
         {
-            SituSlotController.Clear();
+            Patcher.Run(() =>
+            {
+                SituSlotController.Clear();
+            });
         }
     }
 
@@ -317,25 +364,28 @@ namespace IlilimModUtils
     {
         public static bool Prefix(string locationInfo, StartingSlotsManager ___startingSlots, OngoingSlotManager ___ongoing)
         {
-            if (!(locationInfo == "__GetAllSlots()" || locationInfo == "__GetStartingSlots()" || locationInfo == "__GetOngoingSlots()"))
-                return true;
-
-            SituSlotController._lastFoundSlots = new List<RecipeSlot>();
-
-            if (locationInfo == "__GetAllSlots()" || locationInfo == "__GetStartingSlots()")
+            return Patcher.Run(() =>
             {
-                SituSlotController._lastFoundSlots.AddRange(
-                    new List<RecipeSlot>(___startingSlots.GetAllSlots())
-                );
-            }
-            if (locationInfo == "__GetAllSlots()" || locationInfo == "__GetOngoingSlots()")
-            {
-                SituSlotController._lastFoundSlots.AddRange(
-                    new List<RecipeSlot>(___ongoing.GetAllSlots())
-                );
-            }
+                if (!(locationInfo == "__GetAllSlots()" || locationInfo == "__GetStartingSlots()" || locationInfo == "__GetOngoingSlots()"))
+                    return true;
 
-            return false;
+                SituSlotController._lastFoundSlots = new List<RecipeSlot>();
+
+                if (locationInfo == "__GetAllSlots()" || locationInfo == "__GetStartingSlots()")
+                {
+                    SituSlotController._lastFoundSlots.AddRange(
+                        new List<RecipeSlot>(___startingSlots.GetAllSlots())
+                    );
+                }
+                if (locationInfo == "__GetAllSlots()" || locationInfo == "__GetOngoingSlots()")
+                {
+                    SituSlotController._lastFoundSlots.AddRange(
+                        new List<RecipeSlot>(___ongoing.GetAllSlots())
+                    );
+                }
+
+                return false;
+            });
         }
     }
 }

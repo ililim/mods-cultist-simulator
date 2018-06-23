@@ -22,9 +22,12 @@ namespace SituationAutomation
     {
         public override void Init()
         {
-            HarmonyInstance
-                .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
-                .PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.Run(() =>
+            {
+                HarmonyInstance
+                    .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
+                    .PatchAll(Assembly.GetExecutingAssembly());
+            });
         }
     }
 
@@ -181,7 +184,6 @@ namespace SituationAutomation
         {
             situationLastCompletionTimes[situation] = DateTime.Now;
             situation.DumpAllResults();
-            return;
         }
     }
 
@@ -190,10 +192,11 @@ namespace SituationAutomation
     {
         public static void Postfix(SituationController __instance, float interval)
         {
-            if (SituationAutomator.IsAutomated(__instance))
+            Patcher.Run(() =>
             {
-                SituationAutomator.DoAutomatedAction(__instance);
-            }
+                if (SituationAutomator.IsAutomated(__instance))
+                    SituationAutomator.DoAutomatedAction(__instance);
+            });
         }
     }
 
@@ -207,21 +210,24 @@ namespace SituationAutomation
             GameObject ___ongoingSlotGreedyIcon,
             ParticleSystem ___ongoingSlotAppearFX
         ) {
-            if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
-                return true;
+            return Patcher.Run(() =>
+            {
+                if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+                    return true;
 
-            bool success = SituationAutomator.ToggleSituationAutomation(
-                __instance.SituationController,
-                ___ongoingSlotImage,
-                ___ongoingSlotArtImage,
-                ___ongoingSlotGreedyIcon,
-                ___ongoingSlotAppearFX
-            );
+                bool success = SituationAutomator.ToggleSituationAutomation(
+                    __instance.SituationController,
+                    ___ongoingSlotImage,
+                    ___ongoingSlotArtImage,
+                    ___ongoingSlotGreedyIcon,
+                    ___ongoingSlotAppearFX
+                );
 
-            if (!success)
-                Registry.Retrieve<INotifier>().ShowNotificationWindow("I can't automate that -", "Only everyday tasks can be automated.");
+                if (!success)
+                    Registry.Retrieve<INotifier>().ShowNotificationWindow("I can't automate that -", "Only everyday tasks can be automated.");
 
-            return false;
+                return false;
+            });
         }
     }
 
@@ -231,7 +237,10 @@ namespace SituationAutomation
     class Patch_SituationToken_DisplayMiniSlot
     {
         public static bool Prefix(SituationToken __instance) {
-            return !SituationAutomator.IsAutomated(__instance.SituationController);
+            return Patcher.Run(() =>
+            {
+                return !SituationAutomator.IsAutomated(__instance.SituationController);
+            });
         }
     }
 
@@ -241,7 +250,10 @@ namespace SituationAutomation
     {
         public static bool Prefix(SituationToken __instance)
         {
-            return !SituationAutomator.IsAutomated(__instance.SituationController);
+            return Patcher.Run(() =>
+            {
+                return !SituationAutomator.IsAutomated(__instance.SituationController);
+            });
         }
     }
 }

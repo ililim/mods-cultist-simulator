@@ -3,6 +3,7 @@ using Assets.CS.TabletopUI;
 using Assets.TabletopUi.Scripts.Infrastructure;
 using Assets.TabletopUi.Scripts.Services;
 using Harmony;
+using IlilimModUtils;
 using Partiality.Modloader;
 using System;
 using System.Reflection;
@@ -19,9 +20,12 @@ namespace QuickSave
     {
         public override void Init()
         {
-            HarmonyInstance
-                .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
-                .PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.Run(() =>
+            {
+                HarmonyInstance
+                    .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
+                    .PatchAll(Assembly.GetExecutingAssembly());
+            });
         }
     }
 
@@ -36,29 +40,32 @@ namespace QuickSave
     {
         static void Postfix()
         {
-            TabletopManager manager = Registry.Retrieve<TabletopManager>();
-            if (Input.GetKeyDown(KeyCode.F5))
+            Patcher.Run(() =>
             {
-                if (TabletopManager.IsSafeToAutosave())
+                TabletopManager manager = Registry.Retrieve<TabletopManager>();
+                if (Input.GetKeyDown(KeyCode.F5))
                 {
-                    manager.ForceAutosave();
+                    if (TabletopManager.IsSafeToAutosave())
+                    {
+                        manager.ForceAutosave();
+                    }
+                    else
+                    {
+                        Registry.Retrieve<INotifier>().ShowNotificationWindow("Not now, not yet -", "I can't save while exploring the Mansus or moving cards.");
+                    }
                 }
-                else
+                else if (Input.GetKeyDown(KeyCode.F9))
                 {
-                    Registry.Retrieve<INotifier>().ShowNotificationWindow("Not now, not yet -", "I can't save while exploring the Mansus or moving cards.");
+                    if (SaveState.HasSaved)
+                    {
+                        manager.LoadGame();
+                    }
+                    else
+                    {
+                        Registry.Retrieve<INotifier>().ShowNotificationWindow("Faint visions, but no memories", "Was that just a dream? Yet it felt so real. As it stands we have not saved the game yet so there is nothing to load.");
+                    }
                 }
-            }
-            else if (Input.GetKeyDown(KeyCode.F9))
-            {
-                if (SaveState.HasSaved)
-                {
-                    manager.LoadGame();
-                }
-                else
-                {
-                    Registry.Retrieve<INotifier>().ShowNotificationWindow("Faint visions, but no memories", "Was that just a dream? Yet it felt so real. As it stands we have not saved the game yet so there is nothing to load.");
-                }
-            }
+            });
         }
     }
 
@@ -67,7 +74,10 @@ namespace QuickSave
     {
         static void Postfix()
         {
-            SaveState.HasSaved = false;
+            Patcher.Run(() =>
+            {
+                SaveState.HasSaved = false;
+            });
         }
     }
 
@@ -76,7 +86,10 @@ namespace QuickSave
     {
         static void Postfix()
         {
-            SaveState.HasSaved = true;
+            Patcher.Run(() =>
+            {
+                SaveState.HasSaved = true;
+            });
         }
     }
 }

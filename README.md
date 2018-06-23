@@ -70,10 +70,11 @@ This mod puts save and load at your finger tips (F5 and F9 respectively). Each t
 
 ## Installation
 
-- Install [Partiality Launcher](https://github.com/PartialityModding/PartialityLauncher/blob/master/Tutorial.md)
-- Unzip the mods [(Download link)](https://github.com/ililim/CultistSimulatorMods/releases) into [GAME_FOLDER]\Mods\
-- Enable the mods your would like to use in the Partiality Launcher menu. You **must** enable **0Harmony** and **IlilimModUtils** for the other mods to work.
-- Run the launcher and enjoy!
+- Install [Partiality Launcher](https://github.com/PartialityModding/PartialityLauncher/blob/master/Tutorial.md) and patch the game. ([Video Tutorial](https://www.youtube.com/watch?v=-bOtCVR_DNw))
+- Download [IlilimCultistSimulatorMods.zip](https://github.com/ililim/CultistSimulatorMods/releases) and extract the dll files into `[GAME_FOLDER]\Mods\`.
+- Re-Launch Partiality Launcher and refresh the mods. Enable the mods your would like to use, but you **must** enable **0Harmony** and **IlilimModUtils** for the other mods to work.
+- Apply the mods in Partiality Launcher.
+- Run the game and enjoy!
 
 ### Feedback and issues
 

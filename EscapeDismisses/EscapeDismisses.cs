@@ -46,7 +46,6 @@ namespace EscapeDismisses
             // If player double taps esc that quickly it's reasonable to think that they want to close all windows
             if ((DateTime.Now - lastClosed).TotalSeconds < 0.35)
             {
-                FileLog.Log("Time fix!");
                 return false;
             }
             Registry.Retrieve<INotifier>().PushTextToLog("__GetDetailWindowsActivityState()"); // hijacked method
@@ -66,12 +65,7 @@ namespace EscapeDismisses
             }
             if (!excludeSituations)
             {
-                FileLog.Log("Hiding situations");
                 Registry.Retrieve<TabletopManager>().CloseAllSituationWindowsExcept(null);
-            }
-            else
-            {
-                FileLog.Log("Excluding Situations");
             }
         }
 

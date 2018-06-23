@@ -5,6 +5,7 @@ using Harmony;
 using IlilimModUtils;
 using Partiality.Modloader;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -43,6 +44,7 @@ namespace ShiftPopulate
 
                 var stack = __instance;
                 var situation = GameBoard.GetOpenSituation();
+                List<RecipeSlot> slots = null;
 
                 if (situation == null)
                 {
@@ -55,21 +57,31 @@ namespace ShiftPopulate
                         }
                 }
 
-                var slots = SituSlotController.GetAllEmptySlots(situation);
-                for (int i = 0; i < slots.Count; i++)
+                if (situation == null)
                 {
-                    if (SituSlotController.StackMatchesSlot(stack, slots[i]))
+                    // Let controller handle the fail state
+                    SituSlotController.MoveStackIntoSlot(stack, null);
+                }
+                else
+                {
+                    var populatedSlot = false;
+                    slots = SituSlotController.GetAllEmptySlots(situation);
+                    for (int i = 0; i < slots.Count; i++)
                     {
-                        SituSlotController.MoveStackIntoSlot(stack, slots[i]);
-                        break;
+                        if (SituSlotController.StackMatchesSlot(stack, slots[i]))
+                        {
+                            SituSlotController.MoveStackIntoSlot(stack, slots[i]);
+                            populatedSlot = true;
+                            break;
+                        }
+                    }
+
+                    // There is no slot available for us, allow the controller to handle the fail state
+                    if (!populatedSlot)
+                    {
+                        SituSlotController.MoveStackIntoSlot(stack, null);
                     }
                 }
-
-                // If we came this far there is no slot available for us, so just populate the first one
-                // and allow the controller to handle the fail state
-                if (slots.Count > 0)
-                    SituSlotController.MoveStackIntoSlot(stack, slots[0]);
-
 
                 return false;
             });

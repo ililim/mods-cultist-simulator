@@ -22,17 +22,23 @@ namespace IlilimModUtils
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
-        public static bool DebugLog = false;
+        private static bool? shouldDebug = null;
+        public static bool ShouldDebug
+        {
+            get {
+                if (shouldDebug == null)
+                {
+                    string path = Application.persistentDataPath + "/config.ini";
+                    shouldDebug = File.Exists(path) ? File.ReadAllText(path).Contains("debug=1") : false;
+                }
+                return (bool)shouldDebug;
+            }
+        }
 
         public override void Init()
         {
             Patcher.Run(() =>
             {
-                string path = Application.persistentDataPath + "/config.ini";
-                if (File.Exists(path))
-                {
-                    DebugLog = File.ReadAllText(path).Contains("debug=1");
-                }
                 HarmonyInstance
                     .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
                     .PatchAll(Assembly.GetExecutingAssembly());
@@ -51,8 +57,7 @@ namespace IlilimModUtils
             }
             catch (Exception e)
             {
-                if (Mod.DebugLog)
-                    FileLog.Log("Error occurred: \n" +  e.ToString());
+                HandleException(e);
                 return defaultReturn;
             }
         }
@@ -69,6 +74,13 @@ namespace IlilimModUtils
                 patch();
                 return null;
             }, null);
+        }
+
+
+        public static void HandleException(Exception e)
+        {
+            if (Mod.ShouldDebug)
+                FileLog.Log("Error occurred: \n" + e.ToString());
         }
     }
 
@@ -246,12 +258,9 @@ namespace IlilimModUtils
         // Instantly moves card into slot
         public static void MoveStackIntoSlot(ElementStackToken elementStack, RecipeSlot slot)
         {
-            // Make sure slot and stack are valid and empty
-            if (!Validator.Available(elementStack) || !Validator.Available(slot))
-                return;
-
-            // Abort with feedback if we don't have a match
-            if (!StackMatchesSlot(elementStack, slot))
+            // Make sure slot and stack are valid and empty and we have a match
+            // Abort with feedback if we don't
+            if (!(Validator.Available(elementStack) && Validator.Available(slot) && StackMatchesSlot(elementStack, slot)))
             {
                 SoundManager.PlaySfx("CardDragFail");
                 return;

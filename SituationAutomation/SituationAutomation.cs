@@ -6,7 +6,10 @@ using IlilimModUtils;
 using Partiality.Modloader;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,10 +23,24 @@ namespace SituationAutomation
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
+        public static float AutomationDistance = 190f;
+
         public override void Init()
         {
             Patcher.Run(() =>
             {
+                string path = Application.persistentDataPath + "/config.ini";
+                if (File.Exists(path))
+                {
+                    string text = File.ReadAllText(path);
+                    Regex configPattern = new Regex(@"automationdistance=([0-9]*[.]?[0-9]+)");
+                    Match match = configPattern.Match(text);
+                    if (match.Success)
+                    {
+                        float.TryParse(match.Groups[1].Value, out float maybeDistance);
+                        if (maybeDistance > 0) AutomationDistance = maybeDistance;
+                    }
+                }
                 HarmonyInstance
                     .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
                     .PatchAll(Assembly.GetExecutingAssembly());
@@ -33,7 +50,6 @@ namespace SituationAutomation
 
     class SituationAutomator
     {
-        public static readonly float maxAutomationDistance = 190f;
 
         static readonly Sprite hammerIconSprite = Resources.Load<Sprite>("icons100/verbs/auction");
 
@@ -86,7 +102,7 @@ namespace SituationAutomation
         public static bool PopulateSlotWithNearbyStacks(SituationController situation, RecipeSlot slotToFill)
         {
             // Trying to fill all the slots
-            var candidateStacks = Positions.GetAdjacentStacks(situation, maxAutomationDistance);
+            var candidateStacks = Positions.GetAdjacentStacks(situation, Mod.AutomationDistance);
             foreach (var stack in candidateStacks)
             if (SituSlotController.StackMatchesSlot(stack, slotToFill))
             {

@@ -310,7 +310,7 @@ namespace IlilimModUtils
                     // Force the stack to remember its last position as this param is not updated by the game reliably
                     stack.lastTablePos = new Vector2?(stack.RectTransform.anchoredPosition);
                     stack.SplitAllButNCardsToNewStack(1, new Context(Context.ActionSource.PlayerDrag));
-                    choreographer.MoveElementToSituationSlot(stack, slotToFill.TokenAndSlot);
+                    choreographer.MoveElementToSituationSlot(stack, slotToFill.TokenAndSlot, new Action<ElementStackToken, TokenAndSlot>(choreographer.ElementGreedyAnimDone));
                 }
 
             SlotsToFill.Clear();

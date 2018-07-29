@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Noon;
 using UnityEngine;
 
 /**
@@ -22,6 +23,9 @@ namespace IlilimModUtils
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
+        public const string ModVersion = "2.1";
+        public const string GameVersion = "2018.7.b.3";
+
         private static bool? shouldDebug = null;
         public static bool ShouldDebug
         {
@@ -39,6 +43,11 @@ namespace IlilimModUtils
         {
             Patcher.Run(() =>
             {
+                if (ShouldDebug)
+                {
+                    FileLog.Log(String.Format("Loading Ililim's Cultist Simulator Mods version: {0}.", ModVersion));
+                    FileLog.Log(String.Format("Mods tested for game version: {0}. Current game version: {1}.", GameVersion, NoonUtility.VersionNumber));
+                }
                 HarmonyInstance
                     .Create("ililim.cultistsimulatormods." + GetType().Namespace.ToLower())
                     .PatchAll(Assembly.GetExecutingAssembly());

@@ -23,8 +23,8 @@ namespace IlilimModUtils
     // Initialize the mod through Partiality
     class Mod : PartialityMod
     {
-        public const string ModVersion = "2.1";
-        public const string GameVersion = "2018.7.b.3";
+        public const string ModVersion = "2.2";
+        public const string GameVersion = "2018.8.b.2";
 
         private static bool? shouldDebug = null;
         public static bool ShouldDebug

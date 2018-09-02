@@ -118,8 +118,8 @@ namespace SituationAutomation
 
         public static void DoAutomatedAction(SituationController situation)
         {
-            // We do not do any automated actions while the player has its window open or is dragging the token
-            if (situation.IsOpen || situation.situationToken as DraggableToken == DraggableToken.itemBeingDragged)
+            // We do not do any automated actions under certain conditions
+            if (TabletopManager.IsInMansus() || situation.IsOpen || situation.situationToken as DraggableToken == DraggableToken.itemBeingDragged)
                 return;
 
             switch (situation.SituationClock.State)

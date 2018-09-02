@@ -42,6 +42,9 @@ namespace ShiftPopulate
                 if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
                     return true;
 
+                // Do not move cards in Mansus. Supporting this could be a future addition
+                if (TabletopManager.IsInMansus()) return false;
+
                 var stack = __instance;
                 var situation = GameBoard.GetOpenSituation();
                 List<RecipeSlot> slots = null;

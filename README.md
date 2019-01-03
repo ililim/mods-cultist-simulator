@@ -1,5 +1,7 @@
 # Cultist Simulator Mods
 
+> **Important note:** The latest versions (> 2018.8.b.2) of the game are not compatible with these mods. I'm hoping to get the fix out for this by sometime mid-January, among other major update (support for MacOs/Linux). Stay tuned!
+
 This is a collection of mods that improve the UX and add extra functionality to Cultist Simulator, mostly geared towards improving usability and keyboard control of the game.
 
 ## 🚀 ShiftPopulate
